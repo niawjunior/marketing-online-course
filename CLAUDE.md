@@ -41,7 +41,9 @@ At `/marketing/` under the team's demo site — built with `BASE_PATH=/marketing
 ## What we decided
 - Name: "ห้องเรียนการตลาด" — an e-learning site for marketing; the learner is a made-up staff member "คุณพิมพ์ชนก" (top right).
 - Pages (menu): หน้าแรก (greeting, stats, เรียนต่อ, คอร์สแนะนำ, shortcuts) · คอร์สเรียน (6 courses, category tabs, search)
-  · แบบทดสอบ (3 quizzes, answer → instant เฉลย + คำอธิบาย, pass at 60) · คลังคำศัพท์ (32 terms, groups, search)
+  · แบบทดสอบ (3 quizzes, answer → instant เฉลย + คำอธิบาย, pass at 60) · คลังคำศัพท์ (32 terms, groups, search;
+  each card has "เข้าใจแล้ว" / "ยังไม่เข้าใจ" — understood terms move to the second view "คำศัพท์ที่เรียนรู้แล้ว",
+  with "ขอทบทวนอีกครั้ง" to move back; a green bar shows learned x/32; seeded 5 understood, 2 not)
   · เครื่องคำนวณ (ROAS/CPA from campaign numbers; sales funnel).
 - Course page `/courses/:id?lesson=` (not in menu): pretend video player / article card, ประเด็นสำคัญ, กรณีศึกษา,
   lesson list; "เรียนจบบทนี้" marks done and goes to the next; the last lesson leads to the course's quiz.

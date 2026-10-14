@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { courses } from "@/data/courses";
 import { glossary } from "@/data/glossary";
 import { quizzes } from "@/data/quizzes";
-import { coursePercent, doneCount, inProgress, learner, nextLesson, quizScores } from "@/lib/progress";
+import { coursePercent, doneCount, inProgress, learnedCount, learner, nextLesson, quizScores } from "@/lib/progress";
 
 const continuing = computed(() => inProgress());
 const totalLessons = courses.reduce((s, c) => s + c.lessons.length, 0);
@@ -20,7 +20,7 @@ const stats = computed(() => [
 ]);
 const shortcuts = [
   { to: "/quiz", title: "แบบทดสอบ", text: "ทบทวนความเข้าใจหลังเรียน", icon: ClipboardCheck },
-  { to: "/glossary", title: "คลังคำศัพท์", text: `${glossary.length} คำที่นักการตลาดต้องรู้`, icon: Library },
+  { to: "/glossary", title: "คลังคำศัพท์", text: `เรียนรู้แล้ว ${learnedCount()} จาก ${glossary.length} คำ`, icon: Library },
   { to: "/tools", title: "เครื่องคำนวณ", text: "คำนวณ ROAS, CPA และ Funnel", icon: Calculator },
 ];
 const today = new Date().toLocaleDateString("th-TH", { weekday: "long", day: "numeric", month: "long", year: "numeric" });

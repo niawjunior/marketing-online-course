@@ -16,3 +16,15 @@ export const courseDone = (c: Course) => c.lessons.filter((l) => done.has(l.id))
 export const coursePercent = (c: Course) => Math.round((courseDone(c) / c.lessons.length) * 100);
 export const nextLesson = (c: Course) => c.lessons.find((l) => !done.has(l.id)) ?? c.lessons[0]!;
 export const inProgress = () => courses.filter((c) => courseDone(c) > 0 && courseDone(c) < c.lessons.length);
+
+// How the learner rated each glossary term — "got" moves it to the learned list.
+export const termStatus = reactive<Record<string, "got" | "not">>({
+  "4P": "got",
+  STP: "got",
+  SWOT: "got",
+  CTR: "got",
+  KPI: "got",
+  ROAS: "not",
+  CLV: "not",
+});
+export const learnedCount = () => Object.values(termStatus).filter((s) => s === "got").length;
