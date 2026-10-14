@@ -45,7 +45,8 @@ At `/marketing/` under the team's demo site — built with `BASE_PATH=/marketing
   each card has "เข้าใจแล้ว" / "ยังไม่เข้าใจ" — understood terms move to the second view "คำศัพท์ที่เรียนรู้แล้ว",
   with "ขอทบทวนอีกครั้ง" to move back; a green bar shows learned x/32; seeded 5 understood, 2 not)
   · เครื่องคำนวณ (ROAS/CPA from campaign numbers; sales funnel).
-- Course page `/courses/:id?lesson=` (not in menu): pretend video player / article card, ประเด็นสำคัญ, กรณีศึกษา,
-  lesson list; "เรียนจบบทนี้" marks done and goes to the next; the last lesson leads to the course's quiz.
+- Course page `/courses/:id?lesson=` (not in menu): every lesson is a reading ARTICLE — no video anywhere (เนี้ยว asked,
+  v3): header (อ่านประมาณ x นาที, เขียนโดย), sections with headings from `src/data/articles.ts`, สรุปประเด็นสำคัญ,
+  กรณีศึกษา, lesson list; "เรียนจบบทนี้" marks done and goes to the next; the last lesson leads to the course's quiz.
 - Progress lives in memory (`src/lib/progress.ts`), seeded mid-way (6 lessons done, basics quiz 80) — a reload resets it.
-- Content in `src/data/courses.ts`, `quizzes.ts`, `glossary.ts`; instructors are made-up names.
+- Content in `src/data/courses.ts`, `articles.ts` (lesson bodies by lesson id), `quizzes.ts`, `glossary.ts`; instructors are made-up names.

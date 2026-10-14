@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { ArrowRight, Award, BookOpenCheck, Calculator, ClipboardCheck, Flame, Library, PlayCircle } from "@lucide/vue";
+import { ArrowRight, Award, BookOpenCheck, Calculator, ClipboardCheck, Flame, Library, BookOpen } from "@lucide/vue";
 import CourseCard from "@/components/CourseCard.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +14,7 @@ const continuing = computed(() => inProgress());
 const totalLessons = courses.reduce((s, c) => s + c.lessons.length, 0);
 const stats = computed(() => [
   { label: "บทเรียนที่เรียนจบ", value: `${doneCount()}/${totalLessons}`, icon: BookOpenCheck },
-  { label: "คอร์สที่กำลังเรียน", value: continuing.value.length, icon: PlayCircle },
+  { label: "คอร์สที่กำลังเรียน", value: continuing.value.length, icon: BookOpen },
   { label: "แบบทดสอบที่ผ่าน", value: `${Object.values(quizScores).filter((s) => s >= 60).length}/${quizzes.length}`, icon: Award },
   { label: "เรียนต่อเนื่อง", value: "5 วัน", icon: Flame },
 ]);
@@ -57,7 +57,7 @@ const today = new Date().toLocaleDateString("th-TH", { weekday: "long", day: "nu
               <span class="text-sm font-medium tabular-nums">{{ coursePercent(c) }}%</span>
             </div>
             <div class="flex items-center gap-3 rounded-lg bg-muted p-3">
-              <PlayCircle class="size-8 shrink-0 text-muted-foreground" />
+              <BookOpen class="size-8 shrink-0 text-muted-foreground" />
               <div class="min-w-0 flex-1">
                 <div class="text-xs text-muted-foreground">บทถัดไป</div>
                 <div class="truncate text-sm font-medium">{{ nextLesson(c).title }}</div>

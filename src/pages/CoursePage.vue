@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue-sonner";
-import { ArrowLeft, ArrowRight, CheckCircle2, Circle, ClipboardCheck, FileText, Lightbulb, Pause, Play, Star, Users, Wrench } from "@lucide/vue";
+import { ArrowLeft, ArrowRight, CheckCircle2, Circle, ClipboardCheck, Clock, FileText, Lightbulb, Star, Users } from "@lucide/vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { courseMinutes, findCourse, formatMinutes, kindLabel, type Lesson } from "@/data/courses";
+import { articles } from "@/data/articles";
+import { courseMinutes, findCourse, formatMinutes, type Lesson } from "@/data/courses";
 import { quizzes } from "@/data/quizzes";
 import { courseDone, coursePercent, isDone, markDone, nextLesson } from "@/lib/progress";
 
@@ -21,22 +22,7 @@ const lesson = computed<Lesson | undefined>(() => {
 });
 const index = computed(() => (course.value && lesson.value ? course.value.lessons.indexOf(lesson.value) : 0));
 const quiz = computed(() => quizzes.find((q) => q.courseId === course.value?.id));
-const kindIcon = { video: Play, article: FileText, workshop: Wrench };
-
-// A pretend player: pressing play runs a bar, so the demo feels alive without a real video.
-const playing = ref(false);
-const played = ref(0);
-let timer: ReturnType<typeof setInterval> | undefined;
-function togglePlay(): void {
-  playing.value = !playing.value;
-  clearInterval(timer);
-  if (playing.value) timer = setInterval(() => (played.value = Math.min(100, played.value + 1)), 120);
-}
-watch(lesson, () => {
-  playing.value = false;
-  played.value = 0;
-  clearInterval(timer);
-});
+const article = computed(() => (lesson.value ? (articles[lesson.value.id] ?? []) : []));
 
 function open(l: Lesson): void {
   router.replace({ query: { lesson: l.id } });
@@ -80,32 +66,24 @@ function finish(): void {
 
     <div class="grid gap-6 lg:grid-cols-[1fr_320px]">
       <div class="flex min-w-0 flex-col gap-5">
-        <div class="relative flex aspect-video flex-col items-center justify-center overflow-hidden rounded-xl bg-zinc-900 bg-gradient-to-br text-white" :class="lesson.kind === 'video' ? '' : course.tone">
-          <template v-if="lesson.kind === 'video'">
-            <button class="flex size-16 items-center justify-center rounded-full bg-white/15 backdrop-blur transition hover:bg-white/25" :aria-label="playing ? 'หยุด' : 'เล่น'" @click="togglePlay">
-              <Pause v-if="playing" class="size-7" /><Play v-else class="ml-1 size-7" />
-            </button>
-            <p class="mt-3 px-6 text-center text-sm text-white/80">บทที่ {{ index + 1 }} · {{ lesson.title }}</p>
-            <div class="absolute inset-x-0 bottom-0 flex items-center gap-3 bg-black/40 px-4 py-2 text-xs">
-              <span class="tabular-nums">{{ Math.floor((lesson.minutes * played) / 100) }}:{{ String(Math.floor(((lesson.minutes * played * 60) / 100) % 60)).padStart(2, "0") }}</span>
-              <div class="h-1 flex-1 rounded-full bg-white/25"><div class="h-1 rounded-full bg-white transition-all" :style="{ width: `${played}%` }" /></div>
-              <span class="tabular-nums">{{ lesson.minutes }}:00</span>
+        <article class="flex flex-col gap-6">
+          <header class="flex flex-col gap-3 border-b pb-6">
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+              <span class="flex items-center gap-1.5"><FileText class="size-4" />บทความ · บทที่ {{ index + 1 }} จาก {{ course.lessons.length }}</span>
+              <span class="flex items-center gap-1.5"><Clock class="size-4" />อ่านประมาณ {{ lesson.minutes }} นาที</span>
             </div>
-          </template>
-          <template v-else>
-            <component :is="kindIcon[lesson.kind]" class="size-12 opacity-80" />
-            <p class="mt-3 text-sm font-medium">{{ kindLabel[lesson.kind] }} · อ่านประมาณ {{ lesson.minutes }} นาที</p>
-          </template>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted-foreground">บทที่ {{ index + 1 }} จาก {{ course.lessons.length }} · {{ kindLabel[lesson.kind] }} {{ lesson.minutes }} นาที</p>
-          <h2 class="text-xl font-semibold tracking-tight md:text-2xl">{{ lesson.title }}</h2>
-          <p class="leading-relaxed text-muted-foreground">{{ lesson.summary }}</p>
-        </div>
+            <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">{{ lesson.title }}</h2>
+            <p class="text-lg leading-relaxed text-muted-foreground">{{ lesson.summary }}</p>
+            <p class="text-sm text-muted-foreground">เขียนโดย {{ course.instructor }}</p>
+          </header>
+          <section v-for="sec in article" :key="sec.heading" class="flex flex-col gap-3">
+            <h3 class="text-lg font-semibold">{{ sec.heading }}</h3>
+            <p v-for="para in sec.paragraphs" :key="para" class="leading-loose">{{ para }}</p>
+          </section>
+        </article>
 
         <Card class="gap-3">
-          <CardHeader><CardTitle class="text-base">ประเด็นสำคัญ</CardTitle></CardHeader>
+          <CardHeader><CardTitle class="text-base">สรุปประเด็นสำคัญ</CardTitle></CardHeader>
           <CardContent>
             <ul class="flex flex-col gap-2.5">
               <li v-for="p in lesson.points" :key="p" class="flex gap-2.5"><CheckCircle2 class="mt-0.5 size-4.5 shrink-0 text-emerald-600" />{{ p }}</li>
@@ -149,7 +127,7 @@ function finish(): void {
               <Circle v-else class="mt-0.5 size-4 shrink-0 text-muted-foreground" />
               <span class="flex-1">
                 <span class="block" :class="l.id === lesson.id && 'font-medium'">{{ i + 1 }}. {{ l.title }}</span>
-                <span class="text-xs text-muted-foreground">{{ kindLabel[l.kind] }} · {{ l.minutes }} นาที</span>
+                <span class="text-xs text-muted-foreground">บทความ · อ่าน {{ l.minutes }} นาที</span>
               </span>
             </button>
           </CardContent>
