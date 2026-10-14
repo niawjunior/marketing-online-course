@@ -39,4 +39,11 @@ At `/marketing/` under the team's demo site — built with `BASE_PATH=/marketing
 - More components: `bunx --bun shadcn-vue@latest add <name>` (e.g. `calendar`, `chart`, `form`).
 
 ## What we decided
-- (nothing yet)
+- Name: "ห้องเรียนการตลาด" — an e-learning site for marketing; the learner is a made-up staff member "คุณพิมพ์ชนก" (top right).
+- Pages (menu): หน้าแรก (greeting, stats, เรียนต่อ, คอร์สแนะนำ, shortcuts) · คอร์สเรียน (6 courses, category tabs, search)
+  · แบบทดสอบ (3 quizzes, answer → instant เฉลย + คำอธิบาย, pass at 60) · คลังคำศัพท์ (32 terms, groups, search)
+  · เครื่องคำนวณ (ROAS/CPA from campaign numbers; sales funnel).
+- Course page `/courses/:id?lesson=` (not in menu): pretend video player / article card, ประเด็นสำคัญ, กรณีศึกษา,
+  lesson list; "เรียนจบบทนี้" marks done and goes to the next; the last lesson leads to the course's quiz.
+- Progress lives in memory (`src/lib/progress.ts`), seeded mid-way (6 lessons done, basics quiz 80) — a reload resets it.
+- Content in `src/data/courses.ts`, `quizzes.ts`, `glossary.ts`; instructors are made-up names.
